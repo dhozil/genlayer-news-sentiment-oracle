@@ -19,6 +19,8 @@ Why this is powerful: Traditional smart contracts cannot read news. GenLayer con
 Open Studio → click ”+” → name it news_sentiment_oracle.py
 
 Paste this code:
+
+```
 # v0.1.0
 ## { "Depends": "py-genlayer:15qfivjvy80800rh998pcxmd2m8va1wq2qzqhz850n8ggcr4i9q0" }
 from genlayer import *
@@ -80,8 +82,8 @@ class NewsSentimentOracle(gl.Contract):
     @gl.public.view
     def get_headline(self) -> str:
         return self.headline
+```
 
------
 
 ## Step 2: Deploy
 
