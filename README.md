@@ -20,7 +20,7 @@ Open Studio → click ”+” → name it news_sentiment_oracle.py
 
 Paste this code:
 # v0.1.0
-# { "Depends": "py-genlayer:15qfivjvy80800rh998pcxmd2m8va1wq2qzqhz850n8ggcr4i9q0" }
+## { "Depends": "py-genlayer:15qfivjvy80800rh998pcxmd2m8va1wq2qzqhz850n8ggcr4i9q0" }
 from genlayer import *
 
 class NewsSentimentOracle(gl.Contract):
@@ -134,18 +134,18 @@ No oracle. No trusted third party. Just AI validators reaching consensus.
 
 ## Real-World Use Cases
 
-DeFi Trading Trigger:
-# Execute trade only if Bitcoin sentiment is bullish
+### DeFi Trading Trigger:
+ Execute trade only if Bitcoin sentiment is bullish
 if oracle.get_sentiment() == "bullish":
     execute_buy_order()
 
-DAO Governance:
-# Only pass proposal if community sentiment is positive
+### DAO Governance:
+ Only pass proposal if community sentiment is positive
 if oracle.get_sentiment() != "bearish":
     pass_proposal()
 
-Risk Management:
-# Pause protocol if negative news detected
+### Risk Management:
+ Pause protocol if negative news detected
 if oracle.get_sentiment() == "bearish" and oracle.get_confidence() == "high":
     pause_protocol()
 
