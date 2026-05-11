@@ -1,6 +1,6 @@
 # 📰 Build a News Sentiment Oracle on GenLayer — Tutorial
 
-What we’re building: An Intelligent Contract that fetches live news, analyzes sentiment, and stores the result on-chain — all without a centralized oracle.
+What we're building: An Intelligent Contract that fetches live news, analyzes sentiment, and stores the result on-chain — all without a centralized oracle.
 
 Why this is powerful: Traditional smart contracts cannot read news. GenLayer contracts can — and multiple AI validators independently verify the sentiment before reaching consensus.
 
@@ -16,13 +16,13 @@ Why this is powerful: Traditional smart contracts cannot read news. GenLayer con
 
 ## Step 1: Create the Contract
 
-Open Studio → click ”+” → name it news_sentiment_oracle.py
+Open Studio → click "+" → name it news_sentiment_oracle.py
 
 Paste this code:
 
-```
+```python
 # v0.1.0
-# { "Depends": "py-genlayer:15qfivjvy80800rh998pcxmd2m8va1wq2qzqhz850n8ggcr4i9q0" }
+# { "Depends": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6" }
 from genlayer import *
 import json
 
@@ -64,9 +64,9 @@ class NewsSentimentOracle(gl.Contract):
         """
         def fetch():
             url = "https://news.google.com/search?q=" + topic + "&hl=en"
-            return gl.get_webpage(url, mode="text")
+            return gl.nondet.web.render(url, mode="text")
 
-        result = gl.eq_principles.eq_principle_prompt_non_comparative(
+        result = gl.eq_principle.prompt_non_comparative(
             fetch,
             task="Read the latest news headlines about " + topic + ". Analyze the overall sentiment. Is the news mostly positive/bullish, negative/bearish, or neutral? Also extract the single most important headline. Respond with: sentiment|confidence|headline. Example: bullish|high|Bitcoin hits new all-time high as institutional demand surges",
             criteria="Answer must follow format: sentiment|confidence|headline where sentiment is bullish, bearish, or neutral, and confidence is high, medium, or low."
@@ -96,9 +96,9 @@ class NewsSentimentOracle(gl.Contract):
         """
         def fetch():
             url = "https://news.google.com/search?q=" + topic + "&hl=en"
-            return gl.get_webpage(url, mode="text")
+            return gl.nondet.web.render(url, mode="text")
 
-        result = gl.eq_principles.eq_principle_prompt_non_comparative(
+        result = gl.eq_principle.prompt_non_comparative(
             fetch,
             task="Based on the latest news headlines about " + topic + ", is the overall sentiment bullish/positive? Respond only: true or false",
             criteria="Answer must be exactly: true or false"
@@ -161,11 +161,11 @@ Then get_sentiment returns "true" or "false" — ready to use in conditional log
 1. You call analyze_sentiment("bitcoin")
 
 2. Each GenLayer validator independently:
-   → Fetches Google News for "bitcoin"
+   → Fetches Google News for "bitcoin" via `gl.nondet.web.render`
    → Sends content to their LLM
    → LLM evaluates sentiment
 
-3. Validators compare results via Equivalence Principle
+3. Validators compare results via Equivalence Principle (`gl.eq_principle.prompt_non_comparative`)
    → If majority agree → consensus reached
    → Result stored on-chain
 
@@ -178,19 +178,25 @@ No oracle. No trusted third party. Just AI validators reaching consensus.
 ## Real-World Use Cases
 
 ### DeFi Trading Trigger:
- Execute trade only if Bitcoin sentiment is bullish
+```python
+# Execute trade only if Bitcoin sentiment is bullish
 if oracle.get_sentiment() == "bullish":
     execute_buy_order()
+```
 
 ### DAO Governance:
- Only pass proposal if community sentiment is positive
+```python
+# Only pass proposal if community sentiment is positive
 if oracle.get_sentiment() != "bearish":
     pass_proposal()
+```
 
 ### Risk Management:
- Pause protocol if negative news detected
+```python
+# Pause protocol if negative news detected
 if oracle.get_sentiment() == "bearish" and oracle.get_confidence() == "high":
     pause_protocol()
+```
 
 -----
 
