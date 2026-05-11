@@ -1,5 +1,5 @@
 # v0.1.0
-# { "Depends": "py-genlayer:15qfivjvy80800rh998pcxmd2m8va1wq2qzqhz850n8ggcr4i9q0" }
+# { "Depends": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6" }
 from genlayer import *
 import json
 
@@ -41,9 +41,9 @@ class NewsSentimentOracle(gl.Contract):
         """
         def fetch():
             url = "https://news.google.com/search?q=" + topic + "&hl=en"
-            return gl.get_webpage(url, mode="text")
+            return gl.nondet.web.render(url, mode="text")
 
-        result = gl.eq_principles.eq_principle_prompt_non_comparative(
+        result = gl.eq_principle.prompt_non_comparative(
             fetch,
             task="Read the latest news headlines about " + topic + ". Analyze the overall sentiment. Is the news mostly positive/bullish, negative/bearish, or neutral? Also extract the single most important headline. Respond with: sentiment|confidence|headline. Example: bullish|high|Bitcoin hits new all-time high as institutional demand surges",
             criteria="Answer must follow format: sentiment|confidence|headline where sentiment is bullish, bearish, or neutral, and confidence is high, medium, or low."
@@ -73,9 +73,9 @@ class NewsSentimentOracle(gl.Contract):
         """
         def fetch():
             url = "https://news.google.com/search?q=" + topic + "&hl=en"
-            return gl.get_webpage(url, mode="text")
+            return gl.nondet.web.render(url, mode="text")
 
-        result = gl.eq_principles.eq_principle_prompt_non_comparative(
+        result = gl.eq_principle.prompt_non_comparative(
             fetch,
             task="Based on the latest news headlines about " + topic + ", is the overall sentiment bullish/positive? Respond only: true or false",
             criteria="Answer must be exactly: true or false"
